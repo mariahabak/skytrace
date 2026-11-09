@@ -1,0 +1,44 @@
+{
+  "train": {
+    "videos": {
+      "BIRD": 53,
+      "DRONE": 128
+    },
+    "sessions": {
+      "BIRD": 7,
+      "DRONE": 2
+    },
+    "clips": {
+      "BIRD": 562,
+      "DRONE": 1620
+    }
+  },
+  "val": {
+    "videos": {
+      "BIRD": 12,
+      "DRONE": 14
+    },
+    "sessions": {
+      "BIRD": 3,
+      "DRONE": 1
+    },
+    "clips": {
+      "BIRD": 115,
+      "DRONE": 173
+    }
+  },
+  "test": {
+    "videos": {
+      "BIRD": 11,
+      "DRONE": 10
+    },
+    "sessions": {
+      "BIRD": 6,
+      "DRONE": 4
+    },
+    "clips": {
+      "BIRD": 119,
+      "DRONE": 124
+    }
+  }
+}

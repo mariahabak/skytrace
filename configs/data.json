@@ -1,0 +1,21 @@
+{
+  "name": "data_ir_bird_drone",
+  "data": {
+    "dataset_root": "data/raw/Drone-detection-dataset",
+    "sensor": "IR",
+    "classes": ["BIRD", "DRONE"],
+    "min_labelled_frames": 40,
+    "session_gap_minutes": 30,
+    "split": {"train": 0.7, "val": 0.15, "test": 0.15},
+    "split_seed": 2026,
+    "clips": {
+      "length": 8,
+      "frame_step": 3,
+      "window_stride": 24,
+      "crop_size": 64,
+      "context": 2.0,
+      "min_crop_side": 16
+    },
+    "processed_dir": "data/processed"
+  }
+}

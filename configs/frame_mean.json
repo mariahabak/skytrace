@@ -1,0 +1,19 @@
+{
+  "name": "frame_mean",
+  "seeds": [0, 1, 2],
+  "data": {"processed_dir": "data/processed"},
+  "model": {
+    "type": "frame_cnn",
+    "clip_rule": "mean",
+    "pretrained": false,
+    "input_size": 112,
+    "batch_size": 128,
+    "device": "auto",
+    "checkpoint_from": "results/frame_single/seed{seed}"
+  },
+  "evaluation": {
+    "target_coverage": 0.9,
+    "size_bins": [0, 12, 16, 20, 1000],
+    "robustness": {"blur": [1.0, 2.0, 3.0], "resolution": [2, 4, 8], "contrast": [0.25, 0.5, 0.75]}
+  }
+}
