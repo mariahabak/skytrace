@@ -1,0 +1,63 @@
+{
+  "name": "smoke_data",
+  "data": {
+    "dataset_root": "data/smoke/raw",
+    "class_ids": {
+      "0": "bird",
+      "1": "drone"
+    },
+    "source_pattern": "",
+    "image_size": 160,
+    "min_box_pixels": 4,
+    "max_images_per_class": null,
+    "split": {
+      "train": 0.7,
+      "val": 0.15,
+      "test": 0.15
+    },
+    "split_seed": 2026,
+    "duplicates": {
+      "max_rms_difference": 0.03,
+      "thumbnail_size": 16
+    },
+    "crops": {
+      "margin": 1.5,
+      "canvas": 96,
+      "min_side": 8
+    },
+    "distance_augment_preview": {
+      "blur_sigma_max": 1.0,
+      "noise_std_max": 0.04
+    },
+    "evaluation": {
+      "synthetic_min_size": 40,
+      "synthetic_sizes": [
+        48,
+        32,
+        24,
+        16
+      ],
+      "real_max_size": 32,
+      "real_size_bins": {
+        "32": [
+          24,
+          32
+        ],
+        "24": [
+          16,
+          24
+        ],
+        "16": [
+          0,
+          16
+        ]
+      },
+      "test_degradation": {
+        "jpeg_quality": 50,
+        "shot_noise_photons": 0,
+        "noise_seed": 0
+      }
+    },
+    "processed_dir": "data/smoke/processed"
+  }
+}

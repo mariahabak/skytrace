@@ -1,7 +1,12 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+venv/
+.venv/
 data/raw/
+data/smoke/
 data/processed/*.pt
 results/*/seed*/*.pt
+results_smoke/
+audit.json
 venv/

@@ -1,0 +1,29 @@
+{
+  "name": "resnet18_distance",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "data_config": "configs/smoke/data.json",
+  "model": {
+    "type": "network",
+    "pretrained": false,
+    "dropout": 0.3,
+    "epochs": 2,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "patience": 2,
+    "num_workers": 0,
+    "device": "auto",
+    "network": "resnet18",
+    "distance_augment": {
+      "p": 0.5,
+      "min_size": 12,
+      "max_size": 64,
+      "blur_sigma_max": 1.0,
+      "noise_std_max": 0.04
+    }
+  }
+}

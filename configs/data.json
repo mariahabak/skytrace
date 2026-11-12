@@ -1,20 +1,66 @@
 {
-  "name": "data_ir_bird_drone",
+  "name": "data",
   "data": {
-    "dataset_root": "data/raw/Drone-detection-dataset",
-    "sensor": "IR",
-    "classes": ["BIRD", "DRONE"],
-    "min_labelled_frames": 40,
-    "session_gap_minutes": 30,
-    "split": {"train": 0.7, "val": 0.15, "test": 0.15},
+    "dataset_root": "data/raw/bird_vs_drone",
+    "class_ids": {
+      "0": "bird",
+      "1": "drone"
+    },
+    "source_pattern": "",
+    "image_size": 640,
+    "min_box_pixels": 4,
+    "max_images_per_class": null,
+    "split": {
+      "train": 0.7,
+      "val": 0.15,
+      "test": 0.15
+    },
     "split_seed": 2026,
-    "clips": {
-      "length": 8,
-      "frame_step": 3,
-      "window_stride": 24,
-      "crop_size": 64,
-      "context": 2.0,
-      "min_crop_side": 16
+    "duplicates": {
+      "max_rms_difference": 0.03,
+      "thumbnail_size": 16
+    },
+    "crops": {
+      "margin": 1.5,
+      "canvas": 96,
+      "min_side": 8
+    },
+    "distance_augment_preview": {
+      "blur_sigma_max": 1.0,
+      "noise_std_max": 0.04
+    },
+    "evaluation": {
+      "synthetic_min_size": 64,
+      "synthetic_sizes": [
+        48,
+        32,
+        24,
+        16
+      ],
+      "real_max_size": 48,
+      "real_size_bins": {
+        "48": [
+          36,
+          48
+        ],
+        "32": [
+          28,
+          36
+        ],
+        "24": [
+          20,
+          28
+        ],
+        "16": [
+          0,
+          20
+        ]
+      },
+      "test_degradation": {
+        "jpeg_quality": 50,
+        "shot_noise_photons": 0,
+        "noise_seed": 0
+      }
     },
     "processed_dir": "data/processed"
   }

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drone or Bird?</title>
+<!-- Author: Mariah Habak -->
+<style>
+  :root { --bg: #f6f5f2; --card: #ffffff; --ink: #1d2430; --muted: #5f6878;
+          --line: #dcd9d2; --bird: #c07a1f; --drone: #2f64a3; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #15181d; --card: #1e2229; --ink: #e8eaee; --muted: #9aa3b2;
+            --line: #313742; --bird: #e0a050; --drone: #6c9fe0; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 28px 16px 48px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 22px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+           padding: 16px; margin-bottom: 16px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; }
+  label { font-weight: 600; }
+  input[type=range] { width: 260px; max-width: 100%; }
+  #sizeLabel { font-variant-numeric: tabular-nums; min-width: 70px; display: inline-block; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .tile h2 { font-size: 14px; margin: 0 0 8px; color: var(--muted); font-weight: 600; }
+  .tile img { width: 100%; aspect-ratio: 1; image-rendering: pixelated; border-radius: 8px;
+              border: 1px solid var(--line); background: #888; }
+  .answer { font-size: 22px; font-weight: 700; margin: 8px 0 4px; }
+  .bird { color: var(--bird); } .drone { color: var(--drone); }
+  .bar { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+  .bar span { display: block; height: 100%; background: var(--drone); }
+  .small { color: var(--muted); font-size: 13px; }
+  .note { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Drone or Bird?</h1>
+  <p class="sub">Upload a photo with one flying object near the centre, then move the slider to make it look further away.</p>
+
+  <section class="panel controls">
+    <div><label for="file">Photo</label><br><input id="file" type="file" accept="image/*"></div>
+    <div>
+      <label for="size">Object size</label> <span id="sizeLabel">full</span><br>
+      <input id="size" type="range" min="0" value="0" step="1">
+    </div>
+    <div class="small" id="status">No photo yet.</div>
+  </section>
+
+  <section class="grid" id="results"></section>
+
+  <p class="note">Research prototype on public data. The scores are model scores, not guaranteed
+  probabilities, and this is not a warning system. The square in the middle of your photo is used as
+  the crop; the object should fill about two thirds of it. Shrinking uses the test recipe
+  (bicubic + JPEG), not the training augmentation.</p>
+</main>
+<script>
+const SIZES = __SIZES__;
+const slider = document.getElementById("size");
+const sizeLabel = document.getElementById("sizeLabel");
+const statusEl = document.getElementById("status");
+const results = document.getElementById("results");
+slider.max = SIZES.length - 1;
+let imageData = null, pending = 0;
+
+function label(size) { return size === "full" ? "full" : size + " px"; }
+
+document.getElementById("file").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { imageData = reader.result; run(); };
+  reader.readAsDataURL(file);
+});
+slider.addEventListener("input", () => { sizeLabel.textContent = label(SIZES[slider.value]); run(); });
+
+async function run() {
+  if (!imageData) return;
+  const size = SIZES[slider.value];
+  const ticket = ++pending;
+  statusEl.textContent = "Thinking…";
+  try {
+    const response = await fetch("/predict", { method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: imageData, size }) });
+    const data = await response.json();
+    if (ticket !== pending) return;
+    if (data.error) { statusEl.textContent = data.error; return; }
+    render(data);
+    statusEl.textContent = "Object size: " + label(data.size);
+  } catch (err) { statusEl.textContent = "Server not reachable."; }
+}
+
+function tile(title, src, body) {
+  const div = document.createElement("div");
+  div.className = "panel tile";
+  const h = document.createElement("h2"); h.textContent = title; div.appendChild(h);
+  const img = document.createElement("img"); img.src = src; img.alt = title; div.appendChild(img);
+  if (body) div.appendChild(body);
+  return div;
+}
+
+function render(data) {
+  results.replaceChildren(tile("What the model sees", data.input));
+  for (const a of data.answers) {
+    const body = document.createElement("div");
+    const ans = document.createElement("div");
+    ans.className = "answer " + a.label; ans.textContent = a.label;
+    const bar = document.createElement("div"); bar.className = "bar";
+    const fill = document.createElement("span");
+    fill.style.width = (100 * a.scores.drone).toFixed(0) + "%"; bar.appendChild(fill);
+    const txt = document.createElement("div"); txt.className = "small";
+    txt.textContent = `drone score ${a.scores.drone.toFixed(2)} · bird score ${a.scores.bird.toFixed(2)}`;
+    body.append(ans, bar, txt);
+    results.appendChild(tile(a.model + " · Grad-CAM", a.heatmap, body));
+  }
+}
+</script>
+</body>
+</html>

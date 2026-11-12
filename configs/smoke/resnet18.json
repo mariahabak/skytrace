@@ -1,0 +1,22 @@
+{
+  "name": "resnet18",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "data_config": "configs/smoke/data.json",
+  "model": {
+    "type": "network",
+    "pretrained": false,
+    "dropout": 0.3,
+    "epochs": 2,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "patience": 2,
+    "num_workers": 0,
+    "device": "auto",
+    "network": "resnet18"
+  }
+}

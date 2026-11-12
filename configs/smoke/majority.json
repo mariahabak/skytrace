@@ -1,0 +1,12 @@
+{
+  "name": "majority",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "data_config": "configs/smoke/data.json",
+  "model": {
+    "type": "majority"
+  }
+}
